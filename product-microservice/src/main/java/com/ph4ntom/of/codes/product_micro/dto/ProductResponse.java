@@ -1,4 +1,4 @@
-package com.ph4ntom.of.codes.productmicro.dto;
+package com.ph4ntom.of.codes.product_micro.dto;
 
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequest {
+public class ProductResponse {
+
+  private String id;
 
   private String name;
   private String description;

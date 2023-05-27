@@ -1,11 +1,11 @@
-package com.ph4ntom.of.codes.productmicro;
+package com.ph4ntom.of.codes.product_micro;
 
 import static com.mongodb.assertions.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ph4ntom.of.codes.productmicro.dto.ProductRequest;
-import com.ph4ntom.of.codes.productmicro.repository.ProductRepository;
+import com.ph4ntom.of.codes.product_micro.dto.ProductRequest;
+import com.ph4ntom.of.codes.product_micro.repository.ProductRepository;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

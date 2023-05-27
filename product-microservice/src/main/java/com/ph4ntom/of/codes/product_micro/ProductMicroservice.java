@@ -1,4 +1,4 @@
-package com.ph4ntom.of.codes.productmicro;
+package com.ph4ntom.of.codes.product_micro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

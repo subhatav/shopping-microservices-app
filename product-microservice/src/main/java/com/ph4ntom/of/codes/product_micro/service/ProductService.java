@@ -1,9 +1,9 @@
-package com.ph4ntom.of.codes.productmicro.service;
+package com.ph4ntom.of.codes.product_micro.service;
 
-import com.ph4ntom.of.codes.productmicro.dto.ProductRequest;
-import com.ph4ntom.of.codes.productmicro.dto.ProductResponse;
-import com.ph4ntom.of.codes.productmicro.model.Product;
-import com.ph4ntom.of.codes.productmicro.repository.ProductRepository;
+import com.ph4ntom.of.codes.product_micro.dto.ProductRequest;
+import com.ph4ntom.of.codes.product_micro.dto.ProductResponse;
+import com.ph4ntom.of.codes.product_micro.model.Product;
+import com.ph4ntom.of.codes.product_micro.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

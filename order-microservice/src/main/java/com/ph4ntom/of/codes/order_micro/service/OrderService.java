@@ -8,8 +8,10 @@ import com.ph4ntom.of.codes.order_micro.repository.OrderRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderService {
 
@@ -20,8 +22,8 @@ public class OrderService {
     final Order order = new Order();
 
     order.setOrderNumber(UUID.randomUUID().toString());
-    order.setOrderLineItems(orderRequest.getOrderLineItemsDtos().stream()
-                                        .map(this::mapToDto).toList());
+    order.setOrderLineItems(
+        orderRequest.getOrderLineItemsDtos().stream().map(this::mapToDto).toList());
 
     orderRepository.save(order);
   }

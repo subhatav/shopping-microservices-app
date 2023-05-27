@@ -1,8 +1,8 @@
-package com.ph4ntom.of.codes.productmicro.controller;
+package com.ph4ntom.of.codes.product_micro.controller;
 
-import com.ph4ntom.of.codes.productmicro.dto.ProductRequest;
-import com.ph4ntom.of.codes.productmicro.dto.ProductResponse;
-import com.ph4ntom.of.codes.productmicro.service.ProductService;
+import com.ph4ntom.of.codes.product_micro.dto.ProductRequest;
+import com.ph4ntom.of.codes.product_micro.dto.ProductResponse;
+import com.ph4ntom.of.codes.product_micro.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
