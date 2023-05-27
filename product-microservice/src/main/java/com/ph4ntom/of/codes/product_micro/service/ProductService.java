@@ -17,6 +17,14 @@ public class ProductService {
 
   private final ProductRepository productRepository;
 
+  private static ProductResponse mapToProductResponse(final Product product) {
+
+    return ProductResponse.builder().id(product.getId())
+                          .name(product.getName())
+                          .description(product.getDescription())
+                          .price(product.getPrice()).build();
+  }
+
   public void createProduct(final ProductRequest productRequest) {
 
     final Product product = Product.builder().name(productRequest.getName())
@@ -32,14 +40,6 @@ public class ProductService {
 
     final List<Product> products = productRepository.findAll();
 
-    return products.stream().map(this::mapToProductResponse).collect(Collectors.toList());
-  }
-
-  private ProductResponse mapToProductResponse(final Product product) {
-
-    return ProductResponse.builder().id(product.getId())
-                          .name(product.getName())
-                          .description(product.getDescription())
-                          .price(product.getPrice()).build();
+    return products.stream().map(ProductService::mapToProductResponse).collect(Collectors.toList());
   }
 }
