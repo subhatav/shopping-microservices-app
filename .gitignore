@@ -1,0 +1,24 @@
+target/
+grafana/
+
+mongo-data
+
+my-sql-data
+mysql_keycloak_data/
+
+postgres/
+postgres-order/
+postgres-inventory/
+
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### VS Code ###
+.vscode/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
