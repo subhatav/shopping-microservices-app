@@ -5,8 +5,10 @@ import com.ph4ntom.of.codes.inventory_micro.repository.InventoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 
+@EnableDiscoveryClient
 @SpringBootApplication
 public class InventoryMicroservice {
 
@@ -19,7 +21,6 @@ public class InventoryMicroservice {
   public CommandLineRunner loadInventoryData(final InventoryRepository inventoryRepository) {
 
     return arguments -> {
-
       final Inventory inventory1 = new Inventory();
 
       inventory1.setSkuCode("iphone_14");

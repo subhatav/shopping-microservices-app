@@ -22,8 +22,8 @@ import org.springframework.web.util.UriBuilder;
 @RequiredArgsConstructor
 public class OrderService {
 
-  private final WebClient webClient;
   private final OrderRepository orderRepository;
+  private final WebClient.Builder webClientBuilder;
 
   private static OrderLineItems mapToDto(final OrderLineItemsDto orderLineItemsDto) {
 
@@ -49,7 +49,7 @@ public class OrderService {
     order.setOrderLineItems(orderRequest.getOrderLineItemsDtos().stream()
                                         .map(OrderService::mapToDto).toList());
 
-    // Call Inventory Service, and place Order if Product is in stock
+    // Call the Inventory Service, and place the Order if the Product is in stock
 
     final List<String> skuCodes = order.getOrderLineItems().stream()
                                        .map(OrderLineItems::getSkuCode).toList();
@@ -63,7 +63,7 @@ public class OrderService {
 
   private InventoryResponse[] getInventoryResponses(final List<String> skuCodes) {
 
-    return webClient.get().uri("http://localhost:8082/api/inventory", buildQueryParam(skuCodes))
-                    .retrieve().bodyToMono(InventoryResponse[].class).block();
+    return webClientBuilder.build().get().uri("http://inventory-microservice/api/inventory",
+           buildQueryParam(skuCodes)).retrieve().bodyToMono(InventoryResponse[].class).block();
   }
 }
