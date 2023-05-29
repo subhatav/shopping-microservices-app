@@ -13,7 +13,7 @@
 
     <artifactId>product-service</artifactId>
 
-    <name>Product Microservice</name>
+    <name>Product Service</name>
     <description>Microservice for Product!</description>
     <url>https://github.com/subhatav/shopping-microservices-app/tree/main/product-service</url>
 

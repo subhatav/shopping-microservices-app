@@ -41,7 +41,7 @@ public class OrderService {
     return (uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build());
   }
 
-  public void placeOrder(final OrderRequest orderRequest) {
+  public String placeOrder(final OrderRequest orderRequest) {
 
     final Order order = new Order();
 
@@ -57,8 +57,12 @@ public class OrderService {
     final boolean allProductsInStock = Arrays.stream(getInventoryResponses(skuCodes))
                                              .allMatch(InventoryResponse::isInStock);
 
-    if (allProductsInStock) orderRepository.save(order);
-    else throw new IllegalArgumentException("Product is not in stock. Please try again later!");
+    if (allProductsInStock) {
+
+      orderRepository.save(order);
+      return "Order placed successfully.";
+
+    } else throw new IllegalArgumentException("Product is not in stock. Please try again later!");
   }
 
   private InventoryResponse[] getInventoryResponses(final List<String> skuCodes) {

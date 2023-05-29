@@ -13,7 +13,7 @@
 
     <artifactId>inventory-service</artifactId>
 
-    <name>Inventory Microservice</name>
+    <name>Inventory Service</name>
     <description>Microservice for Inventory!</description>
     <url>https://github.com/subhatav/shopping-microservices-app/tree/main/inventory-service</url>
 
