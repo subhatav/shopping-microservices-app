@@ -3,6 +3,7 @@ package com.ph4ntom.of.codes.order_micro.service;
 import com.ph4ntom.of.codes.order_micro.dto.InventoryResponse;
 import com.ph4ntom.of.codes.order_micro.dto.OrderLineItemsDto;
 import com.ph4ntom.of.codes.order_micro.dto.OrderRequest;
+import com.ph4ntom.of.codes.order_micro.event.OrderPlacedEvent;
 import com.ph4ntom.of.codes.order_micro.model.Order;
 import com.ph4ntom.of.codes.order_micro.model.OrderLineItems;
 import com.ph4ntom.of.codes.order_micro.repository.OrderRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,6 +26,7 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
   private final WebClient.Builder webClientBuilder;
+  private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
   private static OrderLineItems mapToOrderLineItems(final OrderLineItemsDto orderLineItemsDto) {
 
@@ -60,6 +63,8 @@ public class OrderService {
     if (allProductsInStock) {
 
       orderRepository.save(order);
+      kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
+
       return "Order placed successfully.";
 
     } else throw new IllegalArgumentException("Product is not in stock. Please try again later!");
