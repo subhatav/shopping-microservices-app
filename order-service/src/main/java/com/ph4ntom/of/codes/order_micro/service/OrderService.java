@@ -7,13 +7,15 @@ import com.ph4ntom.of.codes.order_micro.event.OrderPlacedEvent;
 import com.ph4ntom.of.codes.order_micro.model.Order;
 import com.ph4ntom.of.codes.order_micro.model.OrderLineItems;
 import com.ph4ntom.of.codes.order_micro.repository.OrderRepository;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,7 +28,8 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
   private final WebClient.Builder webClientBuilder;
-  private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+  private final ObservationRegistry observationRegistry;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   private static OrderLineItems mapToOrderLineItems(final OrderLineItemsDto orderLineItemsDto) {
 
@@ -49,30 +52,39 @@ public class OrderService {
     final Order order = new Order();
 
     order.setOrderNumber(UUID.randomUUID().toString());
-    order.setOrderLineItems(orderRequest.getOrderLineItemsDtos()
-         .stream().map(OrderService::mapToOrderLineItems).toList());
+    order.setOrderLineItems(orderRequest.getOrderLineItemsDtos().stream()
+                                        .map(OrderService::mapToOrderLineItems).toList());
 
-    // Call the Inventory Service, and place the Order if the Product is in stock
+    final Observation inventoryServiceObservation = Observation.createNotStarted("inventory-service-lookup",
+                                                                                  this.observationRegistry);
 
-    final List<String> skuCodes = order.getOrderLineItems().stream()
-                                       .map(OrderLineItems::getSkuCode).toList();
+    inventoryServiceObservation.lowCardinalityKeyValue("call", "inventory-service");
 
-    final boolean allProductsInStock = Arrays.stream(getInventoryResponses(skuCodes))
-                                             .allMatch(InventoryResponse::isInStock);
+    return inventoryServiceObservation.observe(() -> {
 
-    if (allProductsInStock) {
+          // Call the Inventory Service, and place the Order if the Product is in stock
 
-      orderRepository.save(order);
-      kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
+          final List<String> skuCodes = order.getOrderLineItems().stream()
+                                             .map(OrderLineItems::getSkuCode).toList();
 
-      return "Order placed successfully.";
+          final boolean allProductsInStock = Arrays.stream(getInventoryResponses(skuCodes))
+                                                   .allMatch(InventoryResponse::isInStock);
 
-    } else throw new IllegalArgumentException("Product is not in stock. Please try again later!");
+          if (allProductsInStock) {
+
+            orderRepository.save(order);
+
+            applicationEventPublisher.publishEvent(new OrderPlacedEvent(this, order.getOrderNumber()));
+
+            return "Order has been successfully placed!";
+
+          } else throw new IllegalArgumentException("Product is not in stock. Please try again later!");
+        });
   }
 
   private InventoryResponse[] getInventoryResponses(final List<String> skuCodes) {
 
-    return webClientBuilder.build().get().uri("http://inventory-service/api/inventory",
-           buildQueryParam(skuCodes)).retrieve().bodyToMono(InventoryResponse[].class).block();
+    return webClientBuilder.build().get().uri("http://inventory-service/api/inventory", buildQueryParam(skuCodes))
+                           .retrieve().bodyToMono(InventoryResponse[].class).block();
   }
 }

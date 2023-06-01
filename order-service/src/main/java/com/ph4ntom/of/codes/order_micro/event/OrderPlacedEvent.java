@@ -1,13 +1,26 @@
 package com.ph4ntom.of.codes.order_micro.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.ApplicationEvent;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class OrderPlacedEvent {
+@Getter
+@Setter
+public class OrderPlacedEvent extends ApplicationEvent {
 
   private String orderNumber;
+
+  public OrderPlacedEvent(final String orderNumber) {
+
+    super(orderNumber);
+
+    this.orderNumber = orderNumber;
+  }
+
+  public OrderPlacedEvent(final Object source, final String orderNumber) {
+
+    super(source);
+
+    this.orderNumber = orderNumber;
+  }
 }

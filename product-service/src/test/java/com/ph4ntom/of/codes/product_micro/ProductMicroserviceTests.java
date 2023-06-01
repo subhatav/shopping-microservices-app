@@ -1,6 +1,6 @@
 package com.ph4ntom.of.codes.product_micro;
 
-import static com.mongodb.assertions.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,13 +47,13 @@ class ProductMicroserviceTests {
     mockMvc.perform(MockMvcRequestBuilders.post("/api/product").contentType(MediaType.APPLICATION_JSON)
            .content(objectMapper.writeValueAsString(productRequest))).andExpect(status().isCreated());
 
-    assertTrue(productRepository.findAll().size() == 1);
+    assertEquals(2, productRepository.findAll().size());
   }
 
   private ProductRequest getProductRequest() {
 
-    return ProductRequest.builder().name("iPhone 14")
-                         .description("Great opportunity to waste your money!")
-                         .price(BigDecimal.valueOf(1200)).build();
+    return ProductRequest.builder().name("iPad Air")
+                         .description("Time to blow your money!")
+                         .price(BigDecimal.valueOf(2500)).build();
   }
 }

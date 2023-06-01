@@ -26,6 +26,8 @@ public class InventoryService {
   @Transactional(readOnly = true)
   public List<InventoryResponse> isInStock(final List<String> skuCode) {
 
+    log.info("Checking the Inventory for availability...");
+
     // log.info("Waiting has started!");
     // Thread.sleep(10000);
     // log.info("Waiting has finished!");

@@ -33,7 +33,7 @@ public class ProductService {
 
     productRepository.save(product);
 
-    log.info("Product #{} is saved.", product.getId());
+    log.info("Product #{} is created!", product.getId());
   }
 
   public List<ProductResponse> getAllProducts() {
