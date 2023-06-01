@@ -254,3 +254,43 @@ services:
 
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+
+  # Configuration for Prometheus (Scraping of Application Metrics)
+
+  prometheus-scraper:
+
+    image: prom/prometheus:v2.44.0
+    container_name: prometheus-scraper
+
+    ports:
+      - '9090:9090'
+
+    restart: always
+
+    depends_on:
+      - product-service
+      - order-service
+      - inventory-service
+      - notification-service
+
+    volumes:
+      - ./prometheus-configs.yml:/etc/prometheus/prometheus.yml
+
+  # Configuration for Grafana (Visualization of Data from Prometheus)
+
+  grafana-visualizer:
+
+    image: grafana/grafana-oss:9.5.2-ubuntu
+    container_name: grafana-visualizer
+
+    ports:
+      - '3000:3000'
+
+    restart: always
+
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+
+    volumes:
+      - ./grafana:/var/lib/grafana
